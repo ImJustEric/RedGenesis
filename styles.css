@@ -1,0 +1,110 @@
+/* Global reset for all websites/mobile */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* CSS Styling for color theme and buttons */
+body {
+  font-family: 'Share Tech Mono', monospace;
+  background:
+    linear-gradient(rgba(10,10,10,0.8), rgba(10,10,10,0.8));
+  color: #ffae42;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header */
+header {
+  background: rgba(0,0,0,0.7);
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 2px solid #ff4500;
+}
+header h1 {
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+  color: #ff4500;
+  text-shadow: 0 0 6px #ff4500;
+}
+
+/* Main layout */
+main {
+  flex: 1;
+  display: flex;
+  backdrop-filter: blur(3px);
+  padding: 1rem;
+}
+.panel {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid #ff4500;
+  border-radius: 4px;
+  margin: 0.5rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+.left { flex: 1; max-width: 30%; }
+.right { flex: 2; justify-content: center; align-items: center; display: flex; }
+
+/* For the boxes of the selectable options */
+label.heading {
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  color: #ffae42;
+}
+.options {
+  display: flex;
+  flex-direction: column;
+}
+.options label {
+  font-size: 1rem;
+  color: #ffae42;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+.options input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+#confirmbutton {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    gap: 0.75rem; 
+    margin-top: auto; 
+}
+
+#confirmbutton button {
+    flex: 1;
+}
+
+/* Image display section */
+#image {
+  width: 100%; height: 100%;
+  max-width: 1024px;
+  max-height: 768px;
+  border: 2px dashed #ffae42;
+  border-radius: 4px;
+  display: flex; justify-content: center; align-items: center;
+  background: rgba(0,0,0,0.5);
+  color: #ffae42;
+  position: relative;
+  font-size: 1.2rem;
+  overflow: hidden;
+}
+
+#image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; 
+}
+
+#image::after {
+  content: 'Awaiting image...';
+  position: absolute;
+}
+
+#image.image-loaded::after,
+#image.image-loading::after {
+  content: '';
+}
+
