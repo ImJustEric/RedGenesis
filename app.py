@@ -2,8 +2,6 @@ from flask import redirect, render_template, session, Flask, request, jsonify
 from openai import OpenAI
 import base64
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 # Configure application 
 app = Flask(__name__)
@@ -32,19 +30,26 @@ def response():
     }
 
     # Structure the prompt 
-    prompt_intro = f"Give me a picture of a human outline, similar to the human being cut in half from the front so that you basically have an outline of the body parts and the skeleton of the human, but the human has these upgrades as it now lives on Mars: "
-    prompt_input = ""
+    
+    prompt_intro = (
+        "Give me a picture of a human outline, similar to the human being cut in half from the front "
+        "so that you basically have an outline of the body parts and the skeleton of the human, "
+        "but the human has these upgrades as it now lives on Mars: "
+    )
+    prompt_input = "; ".join(part_prompt[surgery] for surgery in surgeries_list if surgery in part_prompt)
     prompt_end = f". Make sure to not include any labels and make it seem more scientfic."
     for i in range(len(surgeries_list)):
         prompt_input += f"{part_prompt[surgeries_list[i]]}{';' if i != len(surgeries_list) - 1 else ''}"
 
     final_prompt = prompt_intro + prompt_input + prompt_end
-    print(final_prompt)
 
     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
     result = client.images.generate(
         model="dall-e-3",
-        prompt=final_prompt
+        prompt=final_prompt,
+        n=1,
+        size="1024x1024",
+        response_format="b64_json"
     )
 
     image_base64 = result.data[0].b64_json
