@@ -41,16 +41,13 @@ def response():
     final_prompt = prompt_intro + prompt_input + prompt_end
     print(final_prompt)
 
-    # client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-    # result = client.images.generate(
-    #     model="dall-e-3",
-    #     prompt=final_prompt
-    # )
+    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+    result = client.images.generate(
+        model="dall-e-3",
+        prompt=final_prompt
+    )
 
-    # image_base64 = result.data[0].b64_json
-    # image_bytes = base64.b64decode(image_base64)
+    image_base64 = result.data[0].b64_json
+    image_bytes = base64.b64decode(image_base64)
 
-    # Return the image to the frontend
-    with open('dog.png', 'rb') as f:
-        return jsonify({'image_bytes': base64.b64encode(f.read()).decode('utf-8')})
-    #return jsonify({'image_bytes': image_base64})
+    return jsonify({'image_bytes': image_base64})
