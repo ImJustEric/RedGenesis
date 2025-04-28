@@ -3,6 +3,11 @@ from openai import OpenAI
 import base64
 import os
 
+# For keeping website alive every 14 minutes 
+import threading
+import requests
+import time
+
 # Configure application 
 app = Flask(__name__)
 
@@ -37,22 +42,42 @@ def response():
         "but the human has these upgrades as it now lives on Mars: "
     )
     prompt_input = "; ".join(part_prompt[surgery] for surgery in surgeries_list if surgery in part_prompt)
-    prompt_end = f". Make sure to not include any labels and make it seem more scientfic."
-    for i in range(len(surgeries_list)):
-        prompt_input += f"{part_prompt[surgeries_list[i]]}{';' if i != len(surgeries_list) - 1 else ''}"
+    prompt_end = f". Make sure to not include any labels and make it seem more scientific."
 
     final_prompt = prompt_intro + prompt_input + prompt_end
 
-    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-    result = client.images.generate(
-        model="dall-e-3",
-        prompt=final_prompt,
-        n=1,
-        size="1024x1024",
-        response_format="b64_json"
-    )
+    try:
+        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        result = client.images.generate(
+            model="dall-e-3",
+            prompt= final_prompt,
+            n=1,
+            size="1024x1024",
+            response_format="b64_json"
+        )
 
-    image_base64 = result.data[0].b64_json
-    image_bytes = base64.b64decode(image_base64)
+        image_base64 = result.data[0].b64_json
+        image_bytes = base64.b64decode(image_base64)
 
+    except Exception:
+        with open('static/default_body.png', 'rb') as f:
+            image_base64 = base64.b64encode(f.read()).decode('utf-8')
+    
     return jsonify({'image_bytes': image_base64})
+    
+
+# Function to keep website alive 
+def self_ping():
+    while True:
+        try:
+            print("Self-pinging to stay awake...")
+            requests.get("https://redgenesis.onrender.com/")
+        except Exception as e:
+            print(f"Ping failed: {e}")
+        time.sleep(780)  # Ping every 13 minutes
+
+if __name__ == "__main__":
+    # Start self-pinging in the background 
+    threading.Thread(target=self_ping, daemon=True).start()
+    
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
