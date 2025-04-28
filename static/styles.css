@@ -108,3 +108,13 @@ label.heading {
   content: '';
 }
 
+/*Allow for better compatibility to devices*/
+@media (max-width: 768px) {
+    main {
+      flex-direction: column;
+    }
+  
+    .left, .right {
+      max-width: 100%;
+    }
+  }
