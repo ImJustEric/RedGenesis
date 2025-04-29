@@ -38,7 +38,7 @@ def response():
         "but the human has these upgrades as it now lives on Mars: "
     )
     prompt_input = "; ".join(part_prompt[surgery] for surgery in surgeries_list if surgery in part_prompt)
-    prompt_end = f". Make sure to not include any labels and make it seem more scientific."
+    prompt_end = f". Make sure to NOT include any labels and make it seem more scientific. Keep the figure human, not like a robot."
 
     final_prompt = prompt_intro + prompt_input + prompt_end
     try:   
